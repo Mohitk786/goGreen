@@ -21,19 +21,15 @@ const makeCommits = (n) => {
   const x = random.int(0, 54);
   const y = random.int(0, 6);
   const date = moment()
-      .subtract(1, "m")
-      .add(x, "w")
-      .add(1, "d")
-      .add(y, "d")
-      .format();
+  .subtract(1, "y")  // Move back 1 year
+  .add(x, "w")       // Add x weeks
+  .add(1, "d")       // Add 1 day
+  .add(y, "d");      // Add y days
 
-  const data = {
-    date: date,
-  };
-  console.log(date);
+const finalDate = moment.min(date, latestPossibleDate).format(); 
 
   jsonfile.writeFile(FILE_PATH, data, () => {
-    simpleGit().add([FILE_PATH]).commit(date, { "--date": date },makeCommits.bind(this,--n));
+    simpleGit().add([FILE_PATH]).commit(finalDate, { "--date": finalDate },makeCommits.bind(this,--n));
   });
 };
 
